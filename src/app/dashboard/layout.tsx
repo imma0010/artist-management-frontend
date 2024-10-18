@@ -17,7 +17,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -26,35 +26,29 @@ export default function RootLayout({
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Function to check token validity
     const checkToken = async () => {
       const token = localStorage.getItem("token");
 
-      // If no token found, redirect to login
       if (!token) {
-        router.push("/");
+        router.push("/"); // Redirect to login if no token is found
         return;
       }
 
-      // Call the API to validate the token
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/check-token`, {
-            method: "GET",
-            headers: {
-              "Authorization": token,
-              "Content-Type": "application/json",
-            },
-          }
-        );
+          method: "GET",
+          headers: {
+            "Authorization": token,
+            "Content-Type": "application/json",
+          },
+        });
 
         const data = await response.json();
 
-        // If token is valid, update state
         if (data.success) {
-          setIsAuthenticated(true);
+          setIsAuthenticated(true); // Set auth state to true if token is valid
         } else {
-          // If invalid token, redirect to login
-          router.push("/");
+          router.push("/"); // Redirect to login if token is invalid
         }
       } catch (error) {
         console.error("Failed to validate token", error);
@@ -65,24 +59,18 @@ export default function RootLayout({
     checkToken();
   }, [router]);
 
-  // Render nothing or a loader if token validation is in progress
   if (!isAuthenticated) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; // Display a loading state while checking token
   }
 
-  // Render layout and children once authenticated
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Sidebar>
-          <div>
-            <Toaster richColors position="top-center" />
-            {children}
-          </div>
-        </Sidebar>
-      </body>
-    </html>
+    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <Sidebar>
+        <div>
+          <Toaster richColors position="top-center" />
+          {children}
+        </div>
+      </Sidebar>
+    </div>
   );
 }
