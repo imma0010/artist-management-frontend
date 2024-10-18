@@ -7,9 +7,11 @@ interface ArtistTableProps {
   totalPages: number;
   onPreviousPage: () => void;
   onNextPage: () => void;
+  editClick: (id: string) => void;
+  deleteClick: (id: string) => void;
 } 
 
-const ArtistTable: FunctionComponent<ArtistTableProps> = ({ artists, currentPage, totalPages, onPreviousPage, onNextPage }): ReactElement => {
+const ArtistTable: FunctionComponent<ArtistTableProps> = ({ artists, currentPage, totalPages, onPreviousPage, onNextPage, editClick, deleteClick }): ReactElement => {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Artist Table</h1>
@@ -36,10 +38,10 @@ const ArtistTable: FunctionComponent<ArtistTableProps> = ({ artists, currentPage
                 <td className="px-4 py-2 border">{artist.first_release_year}</td>
                 <td className="px-4 py-2 border">{artist.no_of_albums_released}</td>
                 <td className="px-4 py-2 border space-x-2">
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  <button onClick={() => editClick(artist?.id?.toString() as string)} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Edit
                   </button>
-                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  <button onClick={() => deleteClick(artist?.id?.toString() as string)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                     Delete
                   </button>
                 </td>
